@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Uncomment to set your own server IP -->
+    <!--<string name="remote_url_baseurl">http://172.16.100.XX:8880</string>-->
+</resources>

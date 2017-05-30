@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp" >
+
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/image_operateur"
+        />
+
+
+    <TextView
+        android:id="@+id/operateur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        tools:text="Operateur"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/image_operateur"
+        android:layout_marginStart="11dp"
+        />
+
+
+    <TextView android:id="@+id/generation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_alignLeft="@+id/operateur"
+        android:layout_below="@+id/operateur"
+        tools:text="Ses generations"
+        />
+
+
+</RelativeLayout>
