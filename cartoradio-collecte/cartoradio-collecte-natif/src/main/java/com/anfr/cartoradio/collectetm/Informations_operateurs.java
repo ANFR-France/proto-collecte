@@ -62,6 +62,7 @@ public class Informations_operateurs  extends AlertDialog {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Operateur persona = (Operateur)parent.getItemAtPosition(position);
                 SupportAdapter support = new SupportAdapter(getContext(),  persona.getSystemes());
+                operateur.setText("Liste des systèmes");
                 maListe.setAdapter(support);
 
             }

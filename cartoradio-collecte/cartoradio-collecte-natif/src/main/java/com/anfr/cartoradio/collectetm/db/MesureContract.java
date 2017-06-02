@@ -9,6 +9,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.anfr.cartoradio.collectetm.service.CommonCellInfo;
 
@@ -296,6 +297,9 @@ public final class MesureContract {
                 List<Mesure> res = new ArrayList<>();
                 while (c.moveToNext()) {
                     Mesure mesure = mesureFromCursor(c);
+
+               //     Log.e("Mesure",String.valueOf(mesure.getParcoursId()));
+
                     res.add(mesure);
                 }
                 c.close();

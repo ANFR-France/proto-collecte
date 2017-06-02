@@ -116,25 +116,25 @@ public class CollecteOpenHelper extends SQLiteOpenHelper {
         return makeObservable(ParcoursContract.list(getReadableDatabase()))
                 .subscribeOn(Schedulers.computation());
     }
-//------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------||||||||||||---------------------------------------------
 
-
-
-
-
+    //Envoi un requête qui permet de faire une jointure entre Parcours et Mesure
     public Observable<List<MesureContract.Mesure>> listMesuresParcours() {
         return makeObservable(MesureContract.listParcours(getReadableDatabase()))
                 .subscribeOn(Schedulers.computation());
     }
 
+    //Envoi une requête qui permet de récupérer les mesures qui ont le même id qu'un parcours
     public Observable<List<MesureContract.Mesure>> listMesuresParcours(UUID parcoursId) {
         return makeObservable(MesureContract.listParcours(getReadableDatabase(), parcoursId))
                 .subscribeOn(Schedulers.computation());
     }
 
+    //Permet d'insérer des mesures dans la base de donnée SQL Lite
     public void insertMesure(MesureContract.Mesure mesure) {
         MesureContract.insert(getWritableDatabase(), mesure);
     }
+
 
     public Observable<ParcoursContract.Parcours> getCurrentParcours() {
         return makeObservable(ParcoursContract.getCurrent(getReadableDatabase()))
@@ -163,9 +163,11 @@ public class CollecteOpenHelper extends SQLiteOpenHelper {
         List<String> mesureIds = new ArrayList<>();
         boolean first = true;
         for (MesureContract.Mesure mesure : mesures) {
+
             if (!first) {
                 mesureIdsClause += ",";
             }
+
             mesureIds.add(mesure.getId().toString());
             mesureIdsClause += "?";
             first = false;

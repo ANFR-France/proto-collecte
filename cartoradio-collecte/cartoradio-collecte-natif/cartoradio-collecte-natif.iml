@@ -149,6 +149,7 @@
     <orderEntry type="library" exported="" name="recyclerview-v7-25.0.0" level="project" />
     <orderEntry type="library" exported="" name="gson-2.6.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-plus-9.8.0" level="project" />
+    <orderEntry type="library" exported="" name="constraint-layout-1.0.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-impl-9.8.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-fitness-9.8.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-nearby-9.8.0" level="project" />
@@ -166,6 +167,7 @@
     <orderEntry type="library" exported="" name="play-services-iid-9.8.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-9.8.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="rules-0.5" level="project" />
+    <orderEntry type="library" exported="" name="constraint-layout-solver-1.0.2" level="project" />
     <orderEntry type="library" exported="" name="rxjava-1.1.6" level="project" />
     <orderEntry type="library" exported="" name="play-services-auth-base-9.8.0" level="project" />
     <orderEntry type="library" exported="" name="adapter-rxjava-2.0.2" level="project" />

@@ -161,13 +161,17 @@ public class ParcoursActivity extends AppCompatActivity {
         finalConvertView.findViewById(R.id.frag_delete).setEnabled(false);
         ((TextView) finalConvertView.findViewById(R.id.frag_parcours_statut)).setText(R.string.synchronisation_en_cours);
 
-        collecteOpenHelper.listMesuresParcours(parcours.getId()).observeOn(AndroidSchedulers.mainThread())
+        collecteOpenHelper.listMesuresParcours(parcours.getId())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<MesureContract.Mesure>>() {
                     @Override
                     public void call(List<MesureContract.Mesure> mesures) {
                         ParcoursWithMesures parcoursWithMesures = new ParcoursWithMesures();
                         parcoursWithMesures.setParcours(parcours);
                         parcoursWithMesures.setMesures(mesures);
+                        Log.e("apqm Parcours",String.valueOf(parcours.getId()));
+                        Log.e("apqm Mesure",String.valueOf(mesures.get(0).getParcoursId()));
+
                         Call<Void> call = ApiManager.getApiManager(ParcoursActivity.this).postParcours(parcoursWithMesures);
                         try {
                             call.enqueue(new Callback<Void>() {

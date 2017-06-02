@@ -18,6 +18,7 @@ import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Parcelable;
@@ -25,6 +26,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -128,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<CommonCellInfo> mCellInfoList;
     private GoogleMap mMap;
     private Marker marker;
+    //Liste des markers qui représentent mon parcours
     private List<Marker> mMarkers = new ArrayList<>();
     private boolean mIsTrackingPosition = true;
     private boolean mMapIsTouched;
@@ -162,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Polygon poly = null;
     ArrayList<LatLng> arrayPoints = null;
     Circle cercle = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onStart() {
         super.onStart();
@@ -379,6 +384,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (hasPermissions()) {
             finishIntialisation();
         }
+
+
+
     }
 
     @Override
@@ -397,6 +405,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mGoogleApiReceiver);
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+        if(marker != null) {
+            marker.setTag(null);
         }
     }
 
@@ -487,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             requesting = false;
-            if(marker_l != null)
+            if(marker_l != null && marker_l.getId() != marker.getId())
             {
                 //marker_l.showInfoWindow();
                 LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -664,15 +675,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
-                mClusterManager.onMarkerClick(marker);
+            public boolean onMarkerClick(Marker markers) {
+                mClusterManager.onMarkerClick(markers);
                // marker.showInfoWindow();
-                GetSuppoer objet = new GetSuppoer(itemSelected.getSup_id(),marker);
+                Log.e("marker s",markers.getId());
+                Log.e("marker",marker.getId());
+
+                if(markers.getId().toString().contains(marker.getId().toString()))
+                {
+                    markers.showInfoWindow();
+                    return true;
+                }
+
+                GetSuppoer objet = new GetSuppoer(itemSelected.getSup_id(),markers);
                 objet.execute((String[]) null);
 
                // marker.showInfoWindow();
-                Log.e("Position lat", String.valueOf(marker.getPosition().latitude));
-                Log.e("Position lon", String.valueOf(marker.getPosition().longitude));
+                Log.e("Position lat", String.valueOf(markers.getPosition().latitude));
+                Log.e("Position lon", String.valueOf(markers.getPosition().longitude));
                 Log.e("itemSelected", String.valueOf(itemSelected.getSup_id()));
 /*
                 if(line1 != null || line2 != null || line3 != null )
@@ -858,6 +878,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         }
 
+
+
                         //Toast.makeText(MainActivity.this, "nombre de GPS: " + String.valueOf(count), Toast.LENGTH_SHORT).show();
                         if (count == 0) {
                             mCurrentSnrCount = null;
@@ -906,8 +928,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+
     @Override
     public void onLocationChanged(Location location) {
+
+
         if (location == null) {
             return;
         }
@@ -921,16 +946,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //On récupère la meilleur force de signal du signal
         Integer bestDbm = mCellInfoUtil.getBestDbm(mCellInfoList);
+
         if(marker != null)
         {
-            marker.remove();
-            marker = null;
+          //  marker.remove();
+            //marker = null;
         }
 
         //firstCall ==  true si marker == null; Sinon firstCall == false
         // boolean firstCall = marker == null;
 
-        if (marker == null) {
+        if (marker == null || marker.getTag() == null) {
 
             if (mMap != null) {
                 marker = mMap.addMarker(new MarkerOptions()
@@ -939,16 +965,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 "GPS : " + (mCurrentSnr == null ? "-" : mCurrentSnr))
                         .anchor(0.5f, 0.5f)
                         .position(currentLocation));
+                marker.setTag("Anything");
                 if(mClusterManager.getMarkerCollection().getMarkers().size() > 0) {
                     getMyCell();
                 }
 
                 Log.e("TM: ",(bestDbm == null ? "-" : bestDbm) + " dBm ; " +
                         "GPS : " + (mCurrentSnr == null ? "-" : mCurrentSnr));
+
+
             }
-
-
         } else {
+            Log.e("test",String.valueOf(bestDbm)+ " et "+ String.valueOf(mCurrentSnr));
+
             marker.setPosition(currentLocation);
             marker.setIcon(Colors.bitmapForDbm(bestDbm, mCurrentSnr));
             marker.setTitle("TM : " + (bestDbm == null ? "-" : bestDbm) + " dBm ; " +
@@ -1190,6 +1219,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //Permet de lancer la mesure
     private void loadCurrentParcours() {
         collecteOpenHelper.getCurrentParcours()
                 .observeOn(AndroidSchedulers.mainThread())

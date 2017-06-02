@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         prod {
-           
+
         }
     }
     dexOptions {
@@ -17,8 +17,8 @@ android {
         applicationId "com.anfr.cartoradio.collectetm"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 100007
-        versionName '1.0.6'
+        versionCode 100009
+        versionName '1.0.9'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         jackOptions {
             enabled false
